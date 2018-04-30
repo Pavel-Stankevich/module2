@@ -15,12 +15,12 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User getUser(final Long id) {
+    public User getUser(Long id) {
         return userRepository.read(id);
     }
 
     @Override
-    public void save(final User user) {
+    public void save(User user) {
         if (null == user.getId()) {
             userRepository.create(user);
         } else {
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(final Long id) {
+    public void delete(Long id) {
         userRepository.delete(id);
     }
 
