@@ -1,6 +1,7 @@
 package com.epam.jmp.bayanouskaya.task11.controller;
 
 import com.epam.jmp.bayanouskaya.task11.domain.User;
+import com.epam.jmp.bayanouskaya.task11.service.api.RoleService;
 import com.epam.jmp.bayanouskaya.task11.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ public class IndexController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
 
     @RequestMapping("index.html")
     private String index(Model model) {
@@ -25,6 +28,7 @@ public class IndexController {
 
     @PostMapping("login.html")
     private String login(@ModelAttribute("user") User user, HttpSession httpSession, Model model) {
+        httpSession.removeAttribute("user");
         User dbUser = userService.getUserByEmail(user.getEmail());
         if (dbUser.getPassword().equals(user.getPassword())) {
             httpSession.setAttribute("user", dbUser);
@@ -35,8 +39,15 @@ public class IndexController {
         }
     }
 
+    @RequestMapping("logout.html")
+    private String login(HttpSession httpSession) {
+        httpSession.removeAttribute("user");
+        return "redirect:/startPage.html";
+    }
+
     @GetMapping("registration.html")
     private String registrationGet(HttpSession httpSession, Model model) {
+        model.addAttribute("roles", roleService.getRoles());
         return "registration";
     }
 
@@ -44,6 +55,7 @@ public class IndexController {
     private String registrationPost(@ModelAttribute("user") User user, HttpSession httpSession, Model model) {
         if (null == user || user.getEmail().isEmpty() || userService.getUserByEmail(user.getEmail()) != null || user.getPassword().isEmpty()) {
             model.addAttribute("user", user);
+            model.addAttribute("roles", roleService.getRoles());
             return "registration";
         } else {
             userService.save(user);
@@ -53,14 +65,14 @@ public class IndexController {
         }
     }
 
-    @PostMapping("startPage.html")
+    @RequestMapping("startPage.html")
     private String startPage(HttpSession httpSession, Model model) {
         User user = (User) httpSession.getAttribute("user");
         String startPage = "";
         if (null == user) {
             startPage = "index.html";
         } else if (user.getRole().getName().equals("user")) {
-            startPage = "products.html";
+            startPage = "goods.html";
         } else {
             startPage = "orders.html";
         }
