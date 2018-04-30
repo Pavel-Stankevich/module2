@@ -2,16 +2,23 @@ package com.epam.jmp.bayanouskaya.task11.repository.impl;
 
 import com.epam.jmp.bayanouskaya.task11.domain.Role;
 import com.epam.jmp.bayanouskaya.task11.repository.api.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 @Repository
 public class RoleRepositoryImpl extends JdbcDaoSupport implements RoleRepository {
+
+    @Autowired
+    public RoleRepositoryImpl(DataSource dataSource) {
+        setDataSource(dataSource);
+    }
 
     @Override
     public List<Role> findAll() {
