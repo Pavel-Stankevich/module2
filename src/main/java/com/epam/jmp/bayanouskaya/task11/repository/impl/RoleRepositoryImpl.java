@@ -2,34 +2,37 @@ package com.epam.jmp.bayanouskaya.task11.repository.impl;
 
 import com.epam.jmp.bayanouskaya.task11.domain.Role;
 import com.epam.jmp.bayanouskaya.task11.repository.api.RoleRepository;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class RoleRepositoryImpl extends JdbcDaoSupport implements RoleRepository {
 
     @Override
     public List<Role> findAll() {
-        return null;
+        String findAllSql = "SELECT id, name " +
+                "FROM task11_part2.roles";
+        return getJdbcTemplate().query(findAllSql, new RoleMapper());
     }
 
     @Override
-    public void create(final Role obj) {
-
+    public Role read(final Long roleId) {
+        String readSql = "SELECT id, name " +
+                "FROM task11_part2.roles " +
+                "WHERE id = ? ";
+        return getJdbcTemplate().queryForObject(readSql, new RoleMapper(), roleId);
     }
 
-    @Override
-    public Role read(final Long aLong) {
-        return null;
-    }
+    private static final class RoleMapper implements RowMapper<Role> {
 
-    @Override
-    public void update(final Role obj) {
-
-    }
-
-    @Override
-    public void delete(final Long aLong) {
-
+        public Role mapRow(ResultSet resultSet, int i) throws SQLException {
+            Role role = new Role();
+            role.setId(resultSet.getLong("id"));
+            role.setName(resultSet.getString("name"));
+            return role;
+        }
     }
 }
