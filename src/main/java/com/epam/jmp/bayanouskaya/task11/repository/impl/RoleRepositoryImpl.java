@@ -4,11 +4,13 @@ import com.epam.jmp.bayanouskaya.task11.domain.Role;
 import com.epam.jmp.bayanouskaya.task11.repository.api.RoleRepository;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public class RoleRepositoryImpl extends JdbcDaoSupport implements RoleRepository {
 
     @Override

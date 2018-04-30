@@ -5,12 +5,14 @@ import com.epam.jmp.bayanouskaya.task11.repository.api.GoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public class GoodRepositoryImpl extends JdbcDaoSupport implements GoodRepository {
 
     @Autowired
