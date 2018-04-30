@@ -3,6 +3,7 @@ package com.epam.jmp.bayanouskaya.task11.repository.impl;
 import com.epam.jmp.bayanouskaya.task11.domain.Role;
 import com.epam.jmp.bayanouskaya.task11.repository.api.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -32,7 +33,12 @@ public class RoleRepositoryImpl extends JdbcDaoSupport implements RoleRepository
         String readSql = "SELECT id, name " +
                 "FROM task11_part2.roles " +
                 "WHERE id = ? ";
-        return getJdbcTemplate().queryForObject(readSql, new RoleMapper(), roleId);
+        Role role = null;
+        try {
+            role = getJdbcTemplate().queryForObject(readSql, new RoleMapper(), roleId);
+        } catch (EmptyResultDataAccessException ex) {
+        }
+        return role;
     }
 
     private static final class RoleMapper implements RowMapper<Role> {

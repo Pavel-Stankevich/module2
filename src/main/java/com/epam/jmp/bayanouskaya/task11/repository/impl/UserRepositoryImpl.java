@@ -4,6 +4,7 @@ import com.epam.jmp.bayanouskaya.task11.domain.Role;
 import com.epam.jmp.bayanouskaya.task11.domain.User;
 import com.epam.jmp.bayanouskaya.task11.repository.api.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -32,7 +33,12 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
                 "FROM task11_part2.users AS u  " +
                 "LEFT JOIN task11_part2.roles AS r ON u.id_role = r.id " +
                 "WHERE u.id = ?";
-        return getJdbcTemplate().queryForObject(readSql, new UserMapper(), userId);
+        User user = null;
+        try {
+            user = getJdbcTemplate().queryForObject(readSql, new UserMapper(), userId);
+        } catch (EmptyResultDataAccessException ex) {
+        }
+        return user;
     }
 
     @Override
@@ -56,7 +62,12 @@ public class UserRepositoryImpl extends JdbcDaoSupport implements UserRepository
                 "FROM task11_part2.users AS u  " +
                 "LEFT JOIN task11_part2.roles AS r ON u.id_role = r.id " +
                 "WHERE u.email = ?";
-        return getJdbcTemplate().queryForObject(readSql, new UserMapper(), email);
+        User user = null;
+        try {
+            user = getJdbcTemplate().queryForObject(readSql, new UserMapper(), email);
+        } catch (EmptyResultDataAccessException ignored) {
+        }
+        return user;
     }
 
     private static final class UserMapper implements RowMapper<User> {

@@ -7,4 +7,8 @@ import java.util.List;
 public interface GoodRepository extends CrudRepository<Good, Long> {
 
     List<Good> findAll();
+
+    List<Good> findGoodByIdOrder(Long orderId);
+
+    void deleteGoodFromOrder(Long orderId, Long goodId);
 }

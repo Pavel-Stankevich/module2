@@ -3,6 +3,7 @@ package com.epam.jmp.bayanouskaya.task11.repository.impl;
 import com.epam.jmp.bayanouskaya.task11.domain.Good;
 import com.epam.jmp.bayanouskaya.task11.repository.api.GoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -22,9 +23,23 @@ public class GoodRepositoryImpl extends JdbcDaoSupport implements GoodRepository
 
     @Override
     public List<Good> findAll() {
-        String findAllSql = "SELECT id, name, count " +
-                "FROM task11_part2.goods";
+        String findAllSql = "SELECT id, name, count FROM task11_part2.goods";
         return getJdbcTemplate().query(findAllSql, new GoodMapper());
+    }
+
+    @Override
+    public List<Good> findGoodByIdOrder(Long orderId) {
+        String findAllSql = "SELECT id, name, count  " +
+                "FROM task11_part2.order_goods AS og  " +
+                "LEFT JOIN task11_part2.goods AS g ON og.id_good = g.id " +
+                "WHERE og.id_order = ?";
+        return getJdbcTemplate().query(findAllSql, new GoodMapper(), orderId);
+    }
+
+    @Override
+    public void deleteGoodFromOrder(final Long orderId, final Long goodId) {
+        String deleteSql = "DELETE FROM task11_part2.order_goods WHERE id_order = ? AND id_good = ? ";
+        getJdbcTemplate().update(deleteSql, orderId, goodId);
     }
 
     @Override
@@ -38,7 +53,13 @@ public class GoodRepositoryImpl extends JdbcDaoSupport implements GoodRepository
         String readSql = "SELECT id, name, count " +
                 "FROM task11_part2.goods " +
                 "WHERE id = ? ";
-        return getJdbcTemplate().queryForObject(readSql, new GoodMapper(), goodId);
+
+        Good good = null;
+        try {
+            good = getJdbcTemplate().queryForObject(readSql, new GoodMapper(), goodId);
+        } catch (EmptyResultDataAccessException ex) {
+        }
+        return good;
     }
 
     @Override
@@ -51,8 +72,7 @@ public class GoodRepositoryImpl extends JdbcDaoSupport implements GoodRepository
 
     @Override
     public void delete(final Long goodIs) {
-        String deleteSql = "DELETE FROM task11_part2.goods " +
-                "WHERE id = ?";
+        String deleteSql = "DELETE FROM task11_part2.goods WHERE id = ?";
         getJdbcTemplate().update(deleteSql, goodIs);
     }
 
