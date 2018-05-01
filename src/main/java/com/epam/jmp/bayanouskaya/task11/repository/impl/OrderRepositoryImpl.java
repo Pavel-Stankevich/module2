@@ -1,5 +1,6 @@
 package com.epam.jmp.bayanouskaya.task11.repository.impl;
 
+import com.epam.jmp.bayanouskaya.task11.domain.Good;
 import com.epam.jmp.bayanouskaya.task11.domain.Order;
 import com.epam.jmp.bayanouskaya.task11.domain.OrderStatus;
 import com.epam.jmp.bayanouskaya.task11.domain.User;
@@ -33,6 +34,26 @@ public class OrderRepositoryImpl extends JdbcDaoSupport implements OrderReposito
                 "FROM task11_part2.orders o " +
                 "LEFT JOIN task11_part2.users u ON o.id_user = u.id ";
         return getJdbcTemplate().query(findAllSql, new OrderMapper());
+    }
+
+    @Override
+    public Order findOpenByUserId(final Long userId) {
+        String findByUserIdSql = "SELECT o.id, o.id_user, u.email, u.full_name ,u.address, o.status " +
+                "FROM task11_part2.orders o " +
+                "LEFT JOIN task11_part2.users u ON o.id_user = u.id " +
+                "WHERE o.id_user = ? AND o.status = '" + OrderStatus.OPEN + "'";
+        Order order = null;
+        try {
+            order = getJdbcTemplate().queryForObject(findByUserIdSql, new OrderMapper(), userId);
+        } catch (EmptyResultDataAccessException ex) {
+        }
+        return order;
+    }
+
+    @Override
+    public void addGood(final Order order, final Good good) {
+        String addGoodSql = "INSERT INTO task11_part2.order_goods(id_order, id_good) VALUES (?, ?)";
+        getJdbcTemplate().update(addGoodSql, order.getId(), good.getId());
     }
 
     @Override
@@ -84,7 +105,7 @@ public class OrderRepositoryImpl extends JdbcDaoSupport implements OrderReposito
             owner.setFullName(resultSet.getString("full_name"));
             owner.setAddress(resultSet.getString("address"));
             order.setOwner(owner);
-            order.setOrderStatus(OrderStatus.valueOf(resultSet.getString("name").toUpperCase()));
+            order.setOrderStatus(OrderStatus.valueOf(resultSet.getString("status").toUpperCase()));
             order.setGoods(goodRepository.findGoodByIdOrder(order.getId()));
             return order;
         }

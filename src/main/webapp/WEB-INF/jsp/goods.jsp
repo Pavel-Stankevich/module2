@@ -10,18 +10,16 @@
       <th scope="col">#</th>
       <th scope="col">Product name</th>
       <th scope="col">Count</th>
-      <th scope="col">Buy now</th>
       <th scope="col">Add to cart</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach var="good" items="goods" varStatus="status">
+    <c:forEach var="good" items="${goods}" varStatus="status">
       <tr>
         <td scope="row">${status.count}</td>
         <td>${good.name}</td>
         <td>${good.count}</td>
-        <td>Buy now</td>
-        <td>Add to cart</td>
+        <td><a class="btn btn-outline-info btn-sm${order.goods.contains(good) ? ' disabled' : ''}" href="<c:url value="/addToCart.html?goodId=${good.id}"/>">Add to cart</a></td>
       </tr>
     </c:forEach>
     </tbody>
