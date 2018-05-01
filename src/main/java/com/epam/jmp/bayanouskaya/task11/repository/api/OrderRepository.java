@@ -10,7 +10,7 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
 
     List<Order> findAll();
 
-    Order findOpenByUserId(Long id);
+    Order findDraftByUserId(Long id);
 
     void addGood(Order order, Good good);
 

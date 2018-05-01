@@ -17,7 +17,7 @@ public class BasketController {
 
     @RequestMapping("basket.html")
     private String registrationGet(HttpSession httpSession, Model model) {
-        model.addAttribute("order", orderRepository.findOpenByUserId(((User) httpSession.getAttribute("user")).getId()));
+        model.addAttribute("order", orderRepository.findDraftByUserId(((User) httpSession.getAttribute("user")).getId()));
         return "registration";
     }
 }

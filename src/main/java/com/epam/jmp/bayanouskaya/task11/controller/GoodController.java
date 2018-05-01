@@ -25,23 +25,23 @@ public class GoodController {
     @RequestMapping("goods.html")
     private String goods(Model model, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
-        model.addAttribute("order", orderService.getOpenOrderByUserId(user.getId()));
+        model.addAttribute("order", orderService.getDraftOrderByUserId(user.getId()));
         model.addAttribute("goods", goodService.getGoods());
-        System.out.println(orderService.getOpenOrderByUserId(user.getId()));
+        System.out.println(orderService.getDraftOrderByUserId(user.getId()));
         return "goods";
     }
 
     @RequestMapping("addToCart.html")
     private String addToCart(@RequestParam("goodId") Long id, HttpSession httpSession) {
         User user = (User) httpSession.getAttribute("user");
-        Order order = orderService.getOpenOrderByUserId(user.getId());
+        Order order = orderService.getDraftOrderByUserId(user.getId());
         if (null == order) {
             order = new Order();
             order.setOwner(user);
-            order.setOrderStatus(OrderStatus.OPEN);
+            order.setOrderStatus(OrderStatus.DRAFT);
             order.setGoods(new ArrayList<>());
             orderService.save(order);
-            order = orderService.getOpenOrderByUserId(user.getId());
+            order = orderService.getDraftOrderByUserId(user.getId());
         }
         orderService.addGood(order, goodService.getGood(id));
         order.getGoods().add(goodService.getGood(id));

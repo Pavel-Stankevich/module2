@@ -10,7 +10,7 @@ public interface OrderService {
 
     Order getOrder(Long id);
 
-    Order getOpenOrderByUserId(Long id);
+    Order getDraftOrderByUserId(Long id);
 
     void save(Order order);
 

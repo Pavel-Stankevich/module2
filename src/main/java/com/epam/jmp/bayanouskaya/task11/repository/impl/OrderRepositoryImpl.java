@@ -37,11 +37,11 @@ public class OrderRepositoryImpl extends JdbcDaoSupport implements OrderReposito
     }
 
     @Override
-    public Order findOpenByUserId(final Long userId) {
+    public Order findDraftByUserId(final Long userId) {
         String findByUserIdSql = "SELECT o.id, o.id_user, u.email, u.full_name ,u.address, o.status " +
                 "FROM task11_part2.orders o " +
                 "LEFT JOIN task11_part2.users u ON o.id_user = u.id " +
-                "WHERE o.id_user = ? AND o.status = '" + OrderStatus.OPEN + "'";
+                "WHERE o.id_user = ? AND o.status = '" + OrderStatus.DRAFT + "'";
         Order order = null;
         try {
             order = getJdbcTemplate().queryForObject(findByUserIdSql, new OrderMapper(), userId);

@@ -25,8 +25,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOpenOrderByUserId(Long id) {
-        return orderRepository.findOpenByUserId(id);
+    public Order getDraftOrderByUserId(Long id) {
+        return orderRepository.findDraftByUserId(id);
     }
 
     @Override
