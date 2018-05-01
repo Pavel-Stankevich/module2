@@ -53,7 +53,13 @@ public class OrderRepositoryImpl extends JdbcDaoSupport implements OrderReposito
     @Override
     public void addGood(final Order order, final Good good) {
         String addGoodSql = "INSERT INTO task11_part2.order_goods(id_order, id_good) VALUES (?, ?)";
-        getJdbcTemplate().update(addGoodSql, order.getId(), good.getId());
+        getJdbcTemplate().update(addGoodSql, order.getId(), good.getId());}
+
+    public void updateStatus(final Long orderId, final OrderStatus orderStatus) {
+        String updateSql = "UPDATE task11_part2.orders " +
+                "SET status = ? " +
+                "WHERE id = ?";
+        getJdbcTemplate().update(updateSql, orderStatus.name(), orderId);
     }
 
     @Override
@@ -85,7 +91,7 @@ public class OrderRepositoryImpl extends JdbcDaoSupport implements OrderReposito
         String updateSql = "UPDATE task11_part2.orders " +
                 "SET (id_user, status) = (?, ?) " +
                 "WHERE id = ?";
-        getJdbcTemplate().update(updateSql, order.getOwner().getId(), order.getOrderStatus().name());
+        getJdbcTemplate().update(updateSql, order.getOwner().getId(), order.getOrderStatus().name(), order.getId());
     }
 
     @Override

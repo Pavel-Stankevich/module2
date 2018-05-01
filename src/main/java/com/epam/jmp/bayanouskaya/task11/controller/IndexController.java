@@ -30,7 +30,7 @@ public class IndexController {
     private String login(@ModelAttribute("user") User user, HttpSession httpSession, Model model) {
         httpSession.removeAttribute("user");
         User dbUser = userService.getUserByEmail(user.getEmail());
-        if (dbUser.getPassword().equals(user.getPassword())) {
+        if (null!=dbUser && dbUser.getPassword().equals(user.getPassword())) {
             httpSession.setAttribute("user", dbUser);
             return "redirect:/startPage.html";
         } else {

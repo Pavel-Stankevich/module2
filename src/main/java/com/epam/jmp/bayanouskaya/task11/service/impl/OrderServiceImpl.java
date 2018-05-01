@@ -3,6 +3,7 @@ package com.epam.jmp.bayanouskaya.task11.service.impl;
 import com.epam.jmp.bayanouskaya.task11.domain.Good;
 import com.epam.jmp.bayanouskaya.task11.domain.Order;
 import com.epam.jmp.bayanouskaya.task11.repository.api.GoodRepository;
+import com.epam.jmp.bayanouskaya.task11.domain.OrderStatus;
 import com.epam.jmp.bayanouskaya.task11.repository.api.OrderRepository;
 import com.epam.jmp.bayanouskaya.task11.service.api.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void delete(Long id) {
         orderRepository.delete(id);
+    }
+
+    @Override
+    public void updateStatus(final Long orderId, final OrderStatus orderStatus) {
+        orderRepository.updateStatus(orderId, orderStatus);
     }
 
     @Override
